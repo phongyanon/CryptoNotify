@@ -59,19 +59,19 @@ checkRows = async () => {
     
             if (row.notifyType === 'above') {
                 if (checkPriceAbove(candles, row.price) === true) {
-                    let msg = `${row.symbol} price is above ${row.price}`
+                    let msg = `${row.symbol} price is above ${row.price} ${row.note}`
                     notifyMsg(msg)
-                    row.status = 'completed'
-                    await rows[1].save()
+                    rows[i].status = 'completed'
+                    await rows[i].save()
                     console.log(msg)
                 }
             }
             else if (row.notifyType === 'below') {
                 if (checkPriceBelow(candles, row.price) === true) {
-                    let msg = `${row.symbol} price is below ${row.price}`
+                    let msg = `${row.symbol} price is below ${row.price} ${row.note}`
                     notifyMsg(msg)
-                    row.status = 'completed'
-                    await rows[1].save()
+                    rows[i].status = 'completed'
+                    await rows[i].save()
                     console.log(msg)
                 }
             }
@@ -110,7 +110,7 @@ checkPriceAbove = (candles=[], price) => {
 
 checkPriceBelow = (candles=[], price) => {
     for(let i in candles){
-        if (price > candles[i].high) return true
+        if (price > candles[i].low) return true
     }
     return false
 }
@@ -146,8 +146,8 @@ notifyMsg = (msg) => {
 // | minute
 // second ( optional )
 // Schedule tasks to be run on the server.
-cron.schedule('5 * * * *', function() {
-    console.log('running a task every 5 minute');
+cron.schedule('0 0 */1 * * *', function() {
+    console.log('running a task every 60 minute');
     // notifyMsg('test')
     checkRows()
 });
